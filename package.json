@@ -1,0 +1,22 @@
+{
+  "name": "newrelic_to_sumo_streamer",
+  "version": "1.0.0",
+  "description": "Push newrelic metrics to sumologic",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vibrato/newrelic-to-sumo-streamer.git"
+  },
+  "author": "RayNg@Vibrato",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vibrato/newrelic-to-sumo-streamer/issues"
+  },
+  "homepage": "https://github.com/vibrato/newrelic-to-sumo-streamer#readme",
+  "dependencies": {
+    "node-insights": "^1.0.16"
+  }
+}
