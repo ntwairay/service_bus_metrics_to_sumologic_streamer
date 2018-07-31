@@ -4,6 +4,7 @@
   "description": "Push newrelic metrics to sumologic",
   "main": "index.js",
   "scripts": {
+    "start": "sh deploy.sh",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,6 +18,7 @@
   },
   "homepage": "https://github.com/vibrato/newrelic-to-sumo-streamer#readme",
   "dependencies": {
-    "node-insights": "^1.0.16"
+    "node-insights": "^1.0.16",
+    "sumo-logger": "^1.5.0"
   }
 }
