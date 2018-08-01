@@ -37,7 +37,7 @@ let metricsProcessor = (newrelic, sumo) => {
   })
 }
 
-setInterval(metricsProcessor.bind(null,newrelicOpts,sumoOpts), 5600);
+setInterval(metricsProcessor.bind(null,newrelicOpts,sumoOpts), 180000);
 
 
 //7542
