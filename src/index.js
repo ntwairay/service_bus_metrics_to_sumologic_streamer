@@ -49,4 +49,5 @@ module.exports = function(context,myTimer) {
   }
 
   metricsProcessor(newrelicOpts,sumoOpts);
+  context.done();
 }
