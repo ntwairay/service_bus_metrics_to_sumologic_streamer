@@ -1,0 +1,50 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appName": {
+      "value": "NewrelicToSumosStreamer"
+    },
+    "queryKey": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/8131752c-1e34-4155-b11b-c84c60daf6b4/resourceGroups/test2rng/providers/Microsoft.KeyVault/vaults/testrngkeyvault"
+        },
+        "secretName": "QUERYKEY"
+      }
+    },
+    "accountId": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/8131752c-1e34-4155-b11b-c84c60daf6b4/resourceGroups/test2rng/providers/Microsoft.KeyVault/vaults/testrngkeyvault"
+        },
+        "secretName": "ACCOUNTID"
+      }
+    },
+    "providerAccountId": {
+      "value": "7542"
+    },
+    "endPoint": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/8131752c-1e34-4155-b11b-c84c60daf6b4/resourceGroups/test2rng/providers/Microsoft.KeyVault/vaults/testrngkeyvault"
+        },
+        "secretName": "ENDPOINT"
+      }
+    },
+    "sessionKey": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/8131752c-1e34-4155-b11b-c84c60daf6b4/resourceGroups/test2rng/providers/Microsoft.KeyVault/vaults/testrngkeyvault"
+        },
+        "secretName": "SESSIONKEY"
+      }
+    },
+    "sourceName": {
+      "value": "azure_sb_rng"
+    },
+    "sourceCategory": {
+      "value": "/test/sb/rockend"
+    },
+  }
+}
