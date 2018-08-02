@@ -4,7 +4,6 @@
   "description": "Push newrelic metrics to sumologic",
   "main": "index.js",
   "scripts": {
-    "start": "sh deploy.sh",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
