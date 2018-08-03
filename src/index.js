@@ -1,6 +1,6 @@
-const Insights = require('node-insights');
-const SumoLogger = require('./sumologger');
-const NewRelicQuery = require('./query');
+const Insights         = require('node-insights');
+const MetricsProcessor = require('./metricsProcessor');
+const NewRelicQuery    = require('./query');
 
 module.exports = function(context) {
 
@@ -27,20 +27,6 @@ module.exports = function(context) {
       // ... any other options ...
   };
 
-  let metricsProcessor = (newrelic, sumo) => {
-    newrelic.query.forEach(queryRequest => {
-      newrelic.insights.query(queryRequest, (err, responseBody) => {
-        if (err) {
-          context.log(err)
-        }
-        else {
-          context.log(responseBody.results[0])
-          SumoLogger.streamMetricsToSumo(sumo,responseBody.results[0])
-        }
-      })
-    })
-  }
-
-  metricsProcessor(newrelicOpts,sumoOpts);
+  MetricsProcessor.loadMetrics(newrelicOpts,sumoOpts);
   context.done();
 }
