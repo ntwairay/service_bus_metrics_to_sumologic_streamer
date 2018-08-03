@@ -1,15 +1,15 @@
 const Insights = require('node-insights');
-const SumoLogger = require('sumo-logger');
+const SumoLogger = require('./sumologger');
+const NewRelicQuery = require('./query');
 
-module.exports = function(context,myTimer) {
+module.exports = function(context) {
 
   const newrelicOpts = {
     insights : new Insights({
       queryKey: process.env.QUERY_KEY,
       accountId: process.env.ACCOUNT_ID
     }),
-    query : { select : 'average(activeMessages)', from: 'AzureServiceBusQueueSample',
-              where  : { providerAccountId: process.env.PROVIDER_ACCOUNT_ID }}
+    query : NewRelicQuery
   }
 
   const sumoOpts = {
@@ -28,24 +28,17 @@ module.exports = function(context,myTimer) {
   };
 
   let metricsProcessor = (newrelic, sumo) => {
-    newrelic.insights.query(newrelic.query, (err, responseBody) => {
-      if (err) {
-        context.log(err)
-      }
-      else {
-        context.log(responseBody.results[0])
-        streamMetricsToSumo(sumo,responseBody.results[0])
-      }
+    newrelic.query.forEach(queryRequest => {
+      newrelic.insights.query(queryRequest, (err, responseBody) => {
+        if (err) {
+          context.log(err)
+        }
+        else {
+          context.log(responseBody.results[0])
+          SumoLogger.streamMetricsToSumo(sumo,responseBody.results[0])
+        }
+      })
     })
-  }
-
-  const streamMetricsToSumo = (opts, metrics, err) => {
-    if (err) {
-      context.log('Error on Rx: ', err);
-    } else {
-      const sumoLogger = new SumoLogger(opts);
-      sumoLogger.log(metrics)
-    }
   }
 
   metricsProcessor(newrelicOpts,sumoOpts);
