@@ -27,6 +27,6 @@ module.exports = function(context) {
       // ... any other options ...
   };
 
-  MetricsProcessor.loadMetrics(newrelicOpts,sumoOpts);
+  MetricsProcessor.loadMetrics(newrelicOpts,sumoOpts, context);
   context.done();
 }

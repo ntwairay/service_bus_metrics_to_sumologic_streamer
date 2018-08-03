@@ -1,6 +1,6 @@
 const SumoLogger = require('./sumologger');
 
-const loadMetrics = (newrelic, sumo) => {
+const loadMetrics = (newrelic, sumo, context) => {
   newrelic.query.forEach(queryRequest => {
     newrelic.insights.query(queryRequest, (err, responseBody) => {
       if (err) {
