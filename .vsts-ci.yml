@@ -1,0 +1,23 @@
+phases:
+  - phase: test_deployment
+    variables:
+    dependsOn: upload_templates
+    displayName: Test template deployments
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    queue:
+      name: Hosted VS2017
+      demands: DotNetFramework
+      matrix:
+        function:
+          templateName: function
+    steps:
+    - task: AzureResourceGroupDeployment@2
+      displayName: Deploy resource group template
+      inputs:
+        action: 'Create Or Update Resource Group'
+        azureSubscription: 'rayng_vibrato_test (8131752c-1e34-4155-b11b-c84c60daf6b4)'
+        resourceGroupName: '$(Build.BuildNumber)-$(templateName)'
+        location: 'australiaeast'
+        csmFile: '$(Build.SourcesDirectory)/arm/$(templateName)/azuredeploy.json'
+        csmParametersFile: '$(Build.SourcesDirectory)/arm/$(templateName)/azuredeploy.parameters.json'
+      condition: or(eq(variables['fileChanged'], 'true'), variables['System.Debug'])
