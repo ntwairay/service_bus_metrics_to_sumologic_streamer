@@ -1,6 +1,5 @@
 phases:
   - phase: test_deployment
-    variables:
     displayName: Test template deployments
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     queue:
