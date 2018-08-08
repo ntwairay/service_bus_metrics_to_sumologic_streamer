@@ -14,10 +14,20 @@ It runs your query (**src/query.js**)to pull the metrics from Newrelic (Azure in
 ### Setup in VSTS
 
 1. Create new project
-2. Setup a new pipeline to read step by .vsts-ci.yml
+2. Setup a new pipeline to read the step by .vsts-ci.yml
 3. Setup the service connection to your Azure account in the new project
 4. Replace "YOUAZUREACCOUNT" in .vsts-ci.yml
-5. Create variables group in VSTS (***look at overrideParameters row in .vsts-ci.yml***)
+5. Create variables group in VSTS and link it to your pipeline
+
+```
+QUERY_KEY      - (NewRelic)
+ACCOUNT_ID     - (NewRelic)
+PROVIDER_ID    - (NewRelic)
+ENDPOINT       - (SumoLogic)
+SESSIONKEY     - (SumoLogic)
+SOURCENAME     - (SumoLogic)
+SOURCECATEGORY - (SumoLogic)
+```
 
 
 ### Local Deployment (Nodejs)
