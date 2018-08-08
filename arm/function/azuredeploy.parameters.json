@@ -3,12 +3,12 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "appName": {
-      "value": "NewrelicToSumosStreamer"
+      "value": ""
     },
     "queryKey": {
       "reference": {
         "keyVault": {
-          "id": "/subscriptions/8131752c-1e34-4155-b11b-c84c60daf6b4/resourceGroups/test2rng/providers/Microsoft.KeyVault/vaults/testrngkeyvault"
+          "id": ""
         },
         "secretName": "QUERYKEY"
       }
@@ -16,18 +16,15 @@
     "accountId": {
       "reference": {
         "keyVault": {
-          "id": "/subscriptions/8131752c-1e34-4155-b11b-c84c60daf6b4/resourceGroups/test2rng/providers/Microsoft.KeyVault/vaults/testrngkeyvault"
+          "id": ""
         },
         "secretName": "ACCOUNTID"
       }
     },
-    "providerAccountId": {
-      "value": "7542"
-    },
     "endPoint": {
       "reference": {
         "keyVault": {
-          "id": "/subscriptions/8131752c-1e34-4155-b11b-c84c60daf6b4/resourceGroups/test2rng/providers/Microsoft.KeyVault/vaults/testrngkeyvault"
+          "id": ""
         },
         "secretName": "ENDPOINT"
       }
@@ -35,16 +32,19 @@
     "sessionKey": {
       "reference": {
         "keyVault": {
-          "id": "/subscriptions/8131752c-1e34-4155-b11b-c84c60daf6b4/resourceGroups/test2rng/providers/Microsoft.KeyVault/vaults/testrngkeyvault"
+          "id": ""
         },
         "secretName": "SESSIONKEY"
       }
     },
     "sourceName": {
-      "value": "azure_sb_rng"
+      "value": ""
     },
     "sourceCategory": {
-      "value": "/test/sb/rockend"
+      "value": ""
+    },
+    "providerId": {
+      "value": ""
     }
   }
 }

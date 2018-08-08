@@ -1,14 +1,14 @@
 module.exports = [
-  { select : 'average(activeMessages)',
+  /*{ select : 'average(activeMessages)',
     from   : 'AzureServiceBusQueueSample',
     where  : {
-      providerAccountId: process.env.PROVIDER_ACCOUNT_ID
+      providerAccountId: 7542
     }
-  }/*,
+  },*/
   { select : '*',
     from: 'AzureServiceBusQueueSample',
     where  : {
-      providerAccountId: process.env.PROVIDER_ACCOUNT_ID
+      providerAccountId: process.env.PROVIDER_ID
     }
-  } */
+  }
 ];
