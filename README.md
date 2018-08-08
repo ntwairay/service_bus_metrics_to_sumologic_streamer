@@ -29,6 +29,12 @@ SOURCENAME     - (SumoLogic)
 SOURCECATEGORY - (SumoLogic)
 ```
 
+#### NewRelic Query Key Setup
+https://docs.newrelic.com/docs/insights/insights-api/get-data/query-insights-event-data-api
+
+#### SumoLogic Session Key Setup
+https://help.sumologic.com/Manage/Security/Access-Keys
+
 
 ### Local Deployment (Nodejs)
 
