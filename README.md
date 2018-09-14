@@ -1,5 +1,5 @@
 # NewRelic Metrics Streamer to Sumologic (VSTS and Azure Function)
-This script is written in Nodejs which will be created as an Azure function, deployed by VSTS Pipeline. It runs your query (src/query.js)to pull the metrics from Newrelic (Azure integration service) and send them to Sumologic as logs or metrics.
+This script is written in Nodejs which will be created as an Azure function, deployed by VSTS Pipeline. It runs the NRQL query in (config/queryconfig.js) to pull the metrics from Newrelic (Azure integration service) and send them to Sumologic as logs or metrics.
 
 # Repository Structure
 Arm folder contains arm template which is foundation of this Functionapp (metrics streamer), is going to be used during build and release
