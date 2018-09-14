@@ -1,5 +1,5 @@
 # NewRelic Metrics Streamer to Sumologic (VSTS and Azure Function)
-This script is written in Nodejs which will be created as an Azure function, deployed by VSTS Pipeline. It runs your query (src/query.js)to pull the metrics from Newrelic (Azure integration service) and export them to Sumologic.
+This script is written in Nodejs which will be created as an Azure function, deployed by VSTS Pipeline. It runs your query (src/query.js)to pull the metrics from Newrelic (Azure integration service) and send them to Sumologic as logs or metrics.
 
 # Repository Structure
 Arm folder contains arm template which is foundation of this Functionapp (metrics streamer), is going to be used during build and release
@@ -69,22 +69,12 @@ SOURCENAME     - (SumoLogic)
 SOURCECATEGORY - (SumoLogic)
 ```
 
+#### Flag to switch between sending data to Sumologic as logs or metrics
+Metric in Sumologic doesn't need a collector in which doesn't require session key, source category and source name. Therefore if those variables are empty, then the program will assume sending data as metric to Sumologic. Also the variables rockendService and azureService are important as it helps to differentiate/spilt the data and generate a reasonable name for each metrics
+
 ### Release from VSTS
 This repository doesn't contain any release pipeline as it should be part of the release deployment for each Rockend services
 (Refer to InvoiceGenius.Notification Release Pipeline for an example)
-
-#### Tasks in release pipeline
-- Create Sumologic collector if it doesn't exist
-- Deploy the arm templates
-- Download the queryconfig.js form other service and replace the example queryconfig.js in this repo
-- Run Mocha test
-- Deploy the source to Azure function
-
-### Run from local machine
-- export above environment variables
-- npm install
-- prepare your queryconfig.js
-- npm start
 
 #### NewRelic Query Key Setup
 https://docs.newrelic.com/docs/insights/insights-api/get-data/query-insights-event-data-api
