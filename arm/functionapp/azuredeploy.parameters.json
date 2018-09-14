@@ -21,14 +21,6 @@
         "secretName": "ACCOUNTID"
       }
     },
-    "endPoint": {
-      "reference": {
-        "keyVault": {
-          "id": ""
-        },
-        "secretName": "ENDPOINT"
-      }
-    },
     "sessionKey": {
       "reference": {
         "keyVault": {
@@ -36,12 +28,6 @@
         },
         "secretName": "SESSIONKEY"
       }
-    },
-    "sourceName": {
-      "value": ""
-    },
-    "sourceCategory": {
-      "value": ""
     },
     "providerId": {
       "value": ""

@@ -1,38 +1,19 @@
 const SumoLogger = require('./sumologger');
 
 const loadMetrics = (newrelic, sumo, context) => {
-  newrelic.query.forEach(queryRequest => {
-    newrelic.insights.query(queryRequest, (err, responseBody) => {
+  newrelic.queryConfig.forEach(request => {
+    newrelic.insights.query(request.nrql, (err, responseBody) => {
       if (err) {
-        context.log(err)
+        context.log(err);
       }
       else {
-        context.log(responseBody.results[0])
-        SumoLogger.streamMetricsToSumo(sumo,responseBody.results[0])
+        context.log(responseBody.results[0].events);
+        sumo.rockendService=request.rockendService;
+        sumo.azureService=request.azureService;
+        SumoLogger.streamMetricsToSumo(sumo,responseBody.results[0].events, context);
       }
     })
   })
-}
+};
 
 module.exports = {loadMetrics}
-
-/********* Local deployment ***********/
-/*
-const SumoLogger = require('./sumologger');
-
-const loadMetrics = (newrelic, sumo) => {
-  newrelic.query.forEach(queryRequest => {
-    newrelic.insights.query(queryRequest, (err, responseBody) => {
-      if (err) {
-        console.log(err)
-      }
-      else {
-        console.log(responseBody.results[0])
-        SumoLogger.streamMetricsToSumo(sumo,responseBody.results[0])
-      }
-    })
-  })
-}
-
-module.exports = {loadMetrics}
-*/

@@ -1,6 +1,6 @@
 phases:
-  - phase: foundation_deployment
-    displayName: build Azure function foundation
+  - phase: test_foundation_deployment
+    displayName: test Azure function foundation
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     queue:
       name: Hosted VS2017
@@ -13,17 +13,65 @@ phases:
       displayName: Deploy resource group template
       inputs:
         action: 'Create Or Update Resource Group'
-        azureSubscription: 'YOURAZUREACCOUNT'
-        resourceGroupName: '$(Build.BuildNumber)-$(APPNAME)-functionapp'
+        azureSubscription: 'metricsstreamer'
+        resourceGroupName: '$(Build.BuildNumber)-$(FUNCTIONAPPNAME)-functionapp'
         location: 'australiaeast'
         csmFile: '$(Build.SourcesDirectory)/arm/$(templateName)/azuredeploy.json'
         csmParametersFile: '$(Build.SourcesDirectory)/arm/$(templateName)/azuredeploy.parameters.json'
-        overrideParameters: '-appName "$(APPNAME)" -templateVersionId "$(Build.BuildId)" -accountId "$(ACCOUNTID)" -queryKey "$(QUERYKEY)" -endPoint "$(ENDPOINT)" -sessionKey "$(SESSIONKEY)" -sourceName "$(SOURCENAME)" -sourceCategory "$(SOURCECATEGORY)" -providerId "$(PROVIDERID)"'
+        overrideParameters: '-appName "$(FUNCTIONAPPNAME)" -environment "test" -templateVersionId "$(Build.BuildId)" -accountId "$(ACCOUNTID)" -queryKey "$(QUERYKEY)" -sessionKey "$(SESSIONKEY)" -providerId "$(PROVIDERID)"'
       condition: or(eq(variables['fileChanged'], 'true'), variables['System.Debug'])
+    - task: AzureCLI@1
+      displayName: Delete resource group - don't wait
+      inputs:
+        azureSubscription: 'metricsstreamer'
+        scriptLocation: inlineScript
+        inlineScript: az group delete --name $(Build.BuildNumber)-$(FUNCTIONAPPNAME)-functionapp --no-wait --yes
 
-  - phase: build_artifacts
-    dependsOn: foundation_deployment
-    displayName: deploy source to Azure function
+  - phase: publish_template_artifacts
+    dependsOn: test_foundation_deployment
+    displayName: build template artifacts
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    queue:
+      name: Hosted VS2017
+      matrix:
+        functionapp:
+          templateName: functionapp
+    steps:
+    - task: CopyFiles@2
+      displayName: Publish template Artifact
+      inputs:
+        sourceFolder: $(Build.SourcesDirectory)
+        contents: '**\arm\functionapp\**'
+        targetFolder: $(Build.ArtifactStagingDirectory)\template
+    - task: CopyPublishBuildArtifacts@1
+      displayName: Copy Publish Artifact
+      inputs:
+        CopyRoot: '$(Build.ArtifactStagingDirectory)'
+        Contents: '**\template\arm\functionapp\**'
+        ArtifactName: 'templates'
+        ArtifactType: Container
+
+  - phase: build_test
+    displayName: build test
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    queue:
+      name: Hosted VS2017
+      demands: npm
+    steps:
+    - task: NodeTool@0
+      displayName: Use Node 6.x
+    - task: Npm@1
+      displayName: npm install
+      inputs:
+        workingDir: '.'
+        verbose: false
+    - bash: npm install --global mocha
+    - bash: mocha tests
+      displayName: run mocha test
+
+  - phase: publish_build_artifacts
+    dependsOn: build_test
+    displayName: build artifacts
     queue:
       name: Hosted VS2017
       demands: npm
@@ -40,17 +88,11 @@ phases:
       inputs:
         rootFolderOrFile: .
         includeRootFolder: false
+        archiveFile: '$(Build.ArtifactStagingDirectory)/source.zip'
     - task: CopyPublishBuildArtifacts@1
       displayName: Copy Publish Artifact
       inputs:
         CopyRoot: '$(Build.ArtifactStagingDirectory)'
-        Contents: '$(Build.BuildId).zip'
-        ArtifactName: drop
+        Contents: 'source.zip'
+        ArtifactName: 'release'
         ArtifactType: Container
-    - task: AzureRmWebAppDeployment@3
-      displayName: Azure App Service Deploy
-      inputs:
-        azureSubscription: 'YOURAZUREACCOUNT'
-        appType: functionapp
-        WebAppName: '$(APPNAME)-$(Build.BuildId)'
-        Package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'

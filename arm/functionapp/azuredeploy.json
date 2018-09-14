@@ -27,6 +27,12 @@
         "description": "Location for all resources."
       }
     },
+    "templateVersionId": {
+      "type": "string",
+      "metadata": {
+        "description": "Build version"
+      }
+    },
     "queryKey": {
       "type": "string",
       "metadata": {
@@ -39,35 +45,23 @@
         "description": "Account number for new relic."
       }
     },
-    "providerAccountId": {
-      "type": "string",
-      "metadata": {
-        "description": "Connection ID for Azure integration in new relic."
-      }
-    },
-    "endPoint": {
-      "type": "string",
-      "metadata": {
-        "description": "https endpoint for Sumologic."
-      }
-    },
     "sessionKey": {
       "type": "string",
       "metadata": {
         "description": "Access key to Sumologic."
       }
     },
-    "sourceName": {
+    "providerId": {
       "type": "string"
     },
-    "sourceCategory": {
+    "environment": {
       "type": "string"
     }
   },
   "variables": {
-    "functionAppName": "[parameters('appName')]",
+    "functionAppName": "[concat(parameters('appName'),'-',parameters('environment'))]",
     "hostingPlanName": "[parameters('appName')]",
-    "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'azfunctions')]",
+    "storageAccountName": "[concat('sourcestore', parameters('templateVersionId'))]",
     "storageAccountid": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
   },
   "resources": [
@@ -95,7 +89,7 @@
     {
       "apiVersion": "2015-08-01",
       "type": "Microsoft.Web/sites",
-      "name": "[parameters('appName')]",
+      "name": "[variables('functionAppName')]",
       "location": "[parameters('location')]",
       "identity": {
           "type": "SystemAssigned"
@@ -130,61 +124,34 @@
               "value": "6.5.0"
             },
             {
-              "name": "QUERY_KEY",
+              "name": "QUERYKEY",
               "value": "[parameters('queryKey')]"
             },
             {
-              "name": "ACCOUNT_ID",
+              "name": "ACCOUNTID",
               "value": "[parameters('accountId')]"
-            },
-            {
-              "name": "PROVIDER_ACCOUNT_ID",
-              "value": "[parameters('providerAccountId')]"
-            },
-            {
-              "name": "ENDPOINT",
-              "value": "[parameters('endPoint')]"
             },
             {
               "name": "SESSIONKEY",
               "value": "[parameters('sessionKey')]"
             },
             {
-              "name": "SOURCENAME",
-              "value": "[parameters('sourceName')]"
-            },
-            {
-              "name": "SOURCECATEGORY",
-              "value": "[parameters('sourceCategory')]"
+              "name": "PROVIDERID",
+              "value": "[parameters('providerId')]"
             }
           ]
         }
-      },
-      "resources": [
-        {
-           "apiVersion": "2015-08-01",
-           "name": "web",
-           "type": "sourcecontrols",
-           "dependsOn": [
-              "[resourceId('Microsoft.Web/sites/', parameters('appName'))]"
-            ],
-           "properties": {
-             "RepoUrl": "https://github.com/vibrato/newrelic-to-sumo-streamer.git",
-             "branch": "master",
-             "isManualIntegration": true
-           }
-        }
-      ]
+      }
     }
   ],
   "outputs": {
     "functionAppTenantId": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.Web/sites'), parameters('appName')).tenantId"
+      "value": "[reference(resourceId('Microsoft.Web/sites'), variables('functionAppName')).tenantId"
     },
     "functionAppPrincipalId": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.Web/sites'), parameters('appName')).principalId"
+      "value": "[reference(resourceId('Microsoft.Web/sites'), variables('functionAppName')).principalId"
     }
   }
 }
